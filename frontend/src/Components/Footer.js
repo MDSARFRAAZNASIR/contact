@@ -1,4 +1,6 @@
 import React from "react";
+
+// this is footer
 const Footer=()=>{
     return(
         <div className="foot">
