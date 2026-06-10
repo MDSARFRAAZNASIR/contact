@@ -10,6 +10,7 @@ import SingUp from './Components/SingUp';
 import LogIn from './Components/LogIn';
 
 function App() {
+  let vari="sarfraaz";
   return (
     <div>
       
