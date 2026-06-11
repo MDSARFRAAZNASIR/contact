@@ -4,9 +4,11 @@ const LogIn=()=>{
     const [email, setEmail]=React.useState("")
     const [password, setPassword]=React.useState("")
     const navigate=useNavigate();
+     //If process.env.REACT_APP_API_URL is undefined, use localhost instead
+const API_URL = process.env.REACT_API_URL || 'http://localhost:5000';
     const Login= async()=>{
         // console.log("email, password", email, password);
-        let result = await fetch("http://localhost:5000/login",{
+        let result = await fetch(`${API_URL}/login`,{
             method: 'post',
             body: JSON.stringify({email, password }),
             headers:{

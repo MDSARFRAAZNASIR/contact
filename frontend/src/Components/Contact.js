@@ -5,8 +5,10 @@ const Contact=()=>{
        useEffect(()=>{
         getContacts();
        },[]);
+         //If process.env.REACT_APP_API_URL is undefined, use localhost instead
+const API_URL = process.env.REACT_API_URL || 'http://localhost:5000';
        const getContacts= async()=>{
-        let result = await fetch("http://localhost:5000/contacts",{
+        let result = await fetch(`${API_URL}/contacts`,{
             headers:{
                 'content-Type':'application/json'
             }
@@ -15,9 +17,10 @@ const Contact=()=>{
         setContact(result)
        }
     //    console.log("contacts", contacts)
+   
 
        const Contactdelete= async(id)=>{
-            let result = await fetch(`http://localhost:5000/delete/${id}`,{
+            let result = await fetch(`${API_URL}/delete/${id}`,{
                 method:'delete',
                 headers:{
                     "content-Type":"application/json"
@@ -32,7 +35,7 @@ const Contact=()=>{
         const Searchcontact= async (event)=>{
             let key=event.target.value;
             if(key){
-                let result= await fetch(`http://localhost:5000/search/${key}`)
+                let result= await fetch(`${API_URL}/search/${key}`)
                 result= await result.json();
                 if(result){
                     setContact(result);

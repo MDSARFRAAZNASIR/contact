@@ -13,8 +13,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env REACT_API_URL=http://16.170.225.210:3001 react-scripts start",
+    "start:local": "cross-env REACT_API_URL=http://localhost:5000 react-scripts start",
+    "build": "cross-env REACT_API_URL=http://16.170.225.210:3001 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write .",

@@ -3,24 +3,16 @@ const AddContact=()=>{
     const [name, setName]=useState("")
     const [contact, setContact]=useState("")
     const [relation, setRelation]=useState("")
+     //If process.env.REACT_APP_API_URL is undefined, use localhost instead
+const API_URL = process.env.REACT_API_URL || 'http://localhost:5000';
 
-    // const Addcontact=async ()=>{
-    //     // console.log(name, contact, relation)
-    //     let result=await fetch("http://localhost:5000/addcontact",{
-    //         method:'post',
-    //         body: JSON.stringify({name, contact, relation}),
-    //         headers:{
-    //             'content-Type':"application/json"
-    //         }
-    //     })
-    //     result = await result.json();
-    //     // console.log(result);
-    // }
+
+  
 
 
     const Addcontact = async () => {
     try {
-        let response = await fetch("http://localhost:5000/addcontact", {
+        let response = await fetch(`${API_URL}/addcontact`, {
             method: 'post',
             body: JSON.stringify({ name, contact, relation }),
             headers: {
