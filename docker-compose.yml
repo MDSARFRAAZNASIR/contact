@@ -12,7 +12,10 @@ services:
     restart: always
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        REACT_API_URL: 172.31.42.210/3001/api
     container_name: frontend
     ports:
       - "3001:3000"
