@@ -86,7 +86,6 @@
 #             docker compose ps
 #           EOF
 
-
 name: build-and-lint
 
 # triggers: define when this workflow should run
@@ -162,10 +161,22 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_APP_DIR: ${{ secrets.EC2_APP_DIR }}
         run: |
-          ssh -i ec2_key.pem ${EC2_USER}@${EC2_HOST} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${EC2_USER}@${EC2_HOST} << 'EOF'
             set -e
-            cd "${EC2_APP_DIR}"
+            
+            # Check if the directory exists but is NOT a valid git repo
+            if [ -d "${EC2_APP_DIR}" ] && [ ! -d "${EC2_APP_DIR}/.git" ]; then
+              echo "Directory exists but is not a git repo. Cleaning it up..."
+              rm -rf "${EC2_APP_DIR}"
+            fi
 
+            # If the directory doesn't exist at all, clone it
+            if [ ! -d "${EC2_APP_DIR}" ]; then
+              echo "Cloning repository..."
+              git clone https://github.com/MDSARFRAAZNASIR/contact.git "${EC2_APP_DIR}"
+            fi
+
+            cd "${EC2_APP_DIR}"
             git fetch --all
             git reset --hard origin/main
 
@@ -173,3 +184,21 @@ jobs:
             docker image prune -f
             docker compose ps
           EOF
+
+      # - name: Deploy on EC2 (git pull + docker compose up -d --build)
+      #   env:
+      #     EC2_HOST: ${{ secrets.EC2_HOST }}
+      #     EC2_USER: ${{ secrets.EC2_USER }}
+      #     EC2_APP_DIR: ${{ secrets.EC2_APP_DIR }}
+      #   run: |
+      #     ssh -i ec2_key.pem ${EC2_USER}@${EC2_HOST} << 'EOF'
+      #       set -e
+      #       cd "${EC2_APP_DIR}"
+
+      #       git fetch --all
+      #       git reset --hard origin/main
+
+      #       docker compose up -d --build
+      #       docker image prune -f
+      #       docker compose ps
+      #     EOF
