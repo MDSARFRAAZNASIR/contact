@@ -139,7 +139,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout (optional)
         uses: actions/checkout@v4
 
       - name: Add EC2 host to known_hosts
