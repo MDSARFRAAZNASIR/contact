@@ -26,7 +26,7 @@ const API_URL = process.env.REACT_API_URL || 'http://localhost:5000';
     }
     return(
         <div>
-            <h2 className="head">Log-In</h2>
+            <h2 className="head" >Log-In Now</h2>
             <input type="text" placeholder="Enter your email" className="addbox"
              onChange={(e)=>setEmail(e.target.value)} value={email}/>
             <input type="password" placeholder="Enter your password" className="addbox"
