@@ -7,8 +7,8 @@ services:
     ports:
       - "5001:5000"
     env:
-    - name: MONGO_URL
-      value: "mongodb+srv://mdsarfraaznasir_db_user:c1fICMVB8HUmLMSH@cluster0.6zjy2ss.mongodb.net/?appName=Cluster0"
+      - name: MONGO_URL
+        value: "mongodb+srv://mdsarfraaznasir_db_user:c1fICMVB8HUmLMSH@cluster0.6zjy2ss.mongodb.net/?appName=Cluster0"
     restart: always
 
   frontend:
