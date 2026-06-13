@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
+
+// 2. Import the database configuration
 require('./db/config');
-// const Config=require('./db/Config');
 const User = require('./db/User');
 const Contact = require('./db/Contact');
 const app = express();
@@ -75,3 +77,4 @@ app.get('/search/:key', async (req, resp) => {
   resp.send(result);
 });
 app.listen(5000);
+
