@@ -65,7 +65,7 @@ pipeline {
     environment {
         FRONTEND_IMAGE = "mern-frontend:jenkins"
         BACKEND_IMAGE  = "mern-backend:jenkins"
-        PORT           = "5000"
+        PORT           = "3001"
         MONGO_URI      = "mongodb://mongo:27017/api" 
     }
      
@@ -97,7 +97,7 @@ EOF
                 docker build -t $BACKEND_IMAGE ./backend
 
                 echo "Building frontend image..."
-                docker build -t $FRONTEND_IMAGE ./frontend --build-arg REACT_API_URL=http://localhost:5000/api
+                docker build -t $FRONTEND_IMAGE ./frontend --build-arg REACT_API_URL=http://localhost:3001/api
                 '''
             }
         }
