@@ -102,11 +102,23 @@ EOF
             }
         }
 
+        // stage('Run with docker compose') {
+        //     steps {
+        //         sh '''
+        //         echo "Starting MERN app with docker compose..."
+        //         docker compose up -d --build
+
+        //         echo "Showing running containers..."
+        //         docker ps
+        //         '''
+        //     }
+        // }
         stage('Run with docker compose') {
             steps {
                 sh '''
                 echo "Starting MERN app with docker compose..."
-                docker compose up -d --build
+                # Removed --build to bypass the buildx version error
+                docker compose up -d
 
                 echo "Showing running containers..."
                 docker ps
