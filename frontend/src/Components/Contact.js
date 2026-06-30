@@ -6,7 +6,7 @@ const Contact=()=>{
         getContacts();
        },[]);
          //If process.env.REACT_APP_API_URL is undefined, use localhost instead
-const API_URL = process.env.REACT_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.REACT_API_URL || 'http://localhost:5000';
        const getContacts= async()=>{
         let result = await fetch(`${API_URL}/contacts`,{
             headers:{

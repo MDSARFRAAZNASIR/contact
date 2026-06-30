@@ -1,23 +1,101 @@
 version: "3.9"
 
+# services:
+#   mongo:
+#     image: mongo:6.0
+#     container_name: mongo
+#     restart: unless-stopped
+#     volumes:
+#       - mongo-data:/data/db
+#     networks:
+#       - mern-net
+#   backend:
+#     build:
+#       context: ./backend
+#       # container_name: backend
+#       dockerfile: Dockerfile
+#     container_name: backend
+#     restart: unless-stopped
+#     env_file:
+#       - ./backend/.env
+#     ports:
+#       - "5001:5000"
+#     depends_on:
+#       - mongo
+#     networks:
+#       - mern-net
+
+#     # environment:
+#     #   - "mongodb+srv://mdsarfraaznasir_db_user:c1fICMVB8HUmLMSH@cluster0.6zjy2ss.mongodb.net/?appName=Cluster0"
+#     # restart: always
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#       args:
+#         # REACT_API_URL: 172.31.42.210/3001/api
+#         REACT_API_URL: http://localhost:3001/api
+
+#     container_name: frontend
+#     ports:
+#       - "3001:3000"
+#     depends_on:
+#       - backend
+#     restart: unless-stopped
+#     networks:
+#      - mern-net
+#     volumes: mongo-data
+#     # networks:
+#     #   - mern-net:
+#     #     driver: bridge
+
+
 services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern-net
+
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
     ports:
       - "5001:5000"
-    environment:
-      - "mongodb+srv://mdsarfraaznasir_db_user:c1fICMVB8HUmLMSH@cluster0.6zjy2ss.mongodb.net/?appName=Cluster0"
-    restart: always
+    depends_on:
+      - mongo
+    networks:
+      - mern-net
 
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
       args:
-        REACT_API_URL: 172.31.42.210/3001/api
+        REACT_API_URL: http://localhost:3001/api
     container_name: frontend
     ports:
       - "3001:3000"
     depends_on:
       - backend
-    restart: always
+    restart: unless-stopped
+    networks:
+      - mern-net
+    volumes:
+      - mongo-data:/app/data
+
+networks:
+  mern-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
