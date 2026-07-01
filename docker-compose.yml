@@ -101,6 +101,51 @@ version: "3.9"
 #   mongo-data:
 
 
+# services:
+#   mongo:
+#     image: mongo:6.0
+#     container_name: mongo
+#     restart: unless-stopped
+#     volumes:
+#       - mongo-data:/data/db
+#     networks:
+#       - mern-net
+
+#   backend:
+#     image: mern-backend:jenkins # Tell compose to look for this pre-built image
+#     container_name: backend
+#     restart: unless-stopped
+#     env_file:
+#       - ./backend/.env # Make sure this matches where Jenkins writes it
+#     ports:
+#       - "5001:5000"
+#     depends_on:
+#       - mongo
+#     networks:
+#       - mern-net
+
+#   frontend:
+#     image: mern-frontend:jenkins # Tell compose to look for this pre-built image
+#     container_name: frontend
+#     ports:
+#       - "3001:3000"
+#     depends_on:
+#       - backend
+#     restart: unless-stopped
+#     networks:
+#       - mern-net
+#     volumes:
+#       - mongo-data:/app/data
+
+# networks:
+#   mern-net:
+#     driver: bridge
+
+# volumes:
+#   mongo-data:
+
+
+
 services:
   mongo:
     image: mongo:6.0
@@ -112,11 +157,14 @@ services:
       - mern-net
 
   backend:
-    image: mern-backend:jenkins # Tell compose to look for this pre-built image
+    image: mern-backend:jenkins
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend
     restart: unless-stopped
     env_file:
-      - ./backend/.env # Make sure this matches where Jenkins writes it
+      - ./backend/.env
     ports:
       - "5001:5000"
     depends_on:
@@ -125,7 +173,10 @@ services:
       - mern-net
 
   frontend:
-    image: mern-frontend:jenkins # Tell compose to look for this pre-built image
+    image: mern-frontend:jenkins
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - "3001:3000"
