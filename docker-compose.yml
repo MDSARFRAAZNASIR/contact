@@ -144,7 +144,60 @@ version: "3.9"
 # volumes:
 #   mongo-data:
 
+#  this is good 
 
+# services:
+#   mongo:
+#     image: mongo:6.0
+#     container_name: mongo
+#     restart: unless-stopped
+#     volumes:
+#       - mongo-data:/data/db
+#     networks:
+#       - mern-net
+
+#   backend:
+#     image: mern-backend:jenkins
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     container_name: backend
+#     restart: unless-stopped
+#     env_file:
+#       - ./backend/.env
+#     ports:
+#       - "5001:5000"
+#     depends_on:
+#       - mongo
+#     networks:
+#       - mern-net
+
+#   frontend:
+#     image: mern-frontend:jenkins
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     container_name: frontend
+#     ports:
+#       - "3001:3000"
+#     depends_on:
+#       - backend
+#     restart: unless-stopped
+#     networks:
+#       - mern-net
+#     volumes:
+#       - mongo-data:/app/data
+
+# networks:
+#   mern-net:
+#     driver: bridge
+
+# volumes:
+#   mongo-data:
+
+
+
+# with health check
 
 services:
   mongo:
@@ -155,6 +208,13 @@ services:
       - mongo-data:/data/db
     networks:
       - mern-net
+    # 1. Ensure Mongo is actually ready to accept database connections
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
   backend:
     image: mern-backend:jenkins
@@ -167,10 +227,19 @@ services:
       - ./backend/.env
     ports:
       - "5001:5000"
+    # 2. Wait for Mongo to pass its health check before starting backend
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - mern-net
+    # 3. Ensure your Node/Express backend is ready to accept HTTP traffic
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"] # Make sure you have a /health route in your Express app!
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   frontend:
     image: mern-frontend:jenkins
@@ -180,13 +249,14 @@ services:
     container_name: frontend
     ports:
       - "3001:3000"
+    # 4. Wait for Backend to pass its health check before starting frontend
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - mern-net
-    volumes:
-      - mongo-data:/app/data
+    # Note: Removed the mongo-data volume from here as the frontend shouldn't share database files directly.
 
 networks:
   mern-net:
