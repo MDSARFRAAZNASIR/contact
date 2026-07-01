@@ -113,12 +113,13 @@ EOF
         //         '''
         //     }
         // }
-        stage('Run with docker compose') {
+     stage('Run with docker compose') {
             steps {
                 sh '''
                 echo "Starting MERN app with docker compose..."
-                # Removed --build to bypass the buildx version error
-                docker compose up -d
+                
+                # Forces Docker Compose to use existing images and completely bypasses Buildx
+                docker compose up -d --no-build
 
                 echo "Showing running containers..."
                 docker ps
